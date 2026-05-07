@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Kanin — Meal Budget Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div class="bg-blob blob-1"></div>
+<div class="bg-blob blob-2"></div>
+<div class="bg-blob blob-3"></div>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo">
+                <span class="logo-mark">⬡</span>
+                <span class="logo-text">kanin</span>
+            </div>
+            <p class="logo-sub">daily meal tracker</p>
+        </div>
+
+        <div class="budget-ring-card">
+            <div class="ring-wrapper">
+                <svg class="ring-svg" viewBox="0 0 120 120">
+                    <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                    <circle class="ring-fill" id="budgetRing" cx="60" cy="60" r="50"
+                            stroke-dasharray="314"
+                            stroke-dashoffset="314"
+                            transform="rotate(-90 60 60)"/>
+                </svg>
+                <div class="ring-center">
+                    <span class="ring-pct" id="ringPct">0%</span>
+                    <span class="ring-label">used</span>
+                </div>
+            </div>
+
+            <div class="budget-figures">
+                <div class="fig-row">
+                    <span class="fig-label">Budget</span>
+                    <span class="fig-val" id="displayBudget">₱0.00</span>
+                </div>
+                <div class="fig-row">
+                    <span class="fig-label">Spent</span>
+                    <span class="fig-val accent-red" id="displaySpent">₱0.00</span>
+                </div>
+                <div class="fig-row">
+                    <span class="fig-label">Left</span>
+                    <span class="fig-val accent-green" id="displayLeft">₱0.00</span>
+                </div>
+            </div>
+
+            <div class="velocity-bar" id="velocityBar">
+                <span id="velocityText">No meals yet</span>
+            </div>
+        </div>
+
+        <div class="set-budget-block">
+            <label class="input-label" for="budgetInput">Daily Budget (₱)</label>
+            <div class="input-row">
+                <input type="number" id="budgetInput" class="styled-input" placeholder="e.g. 300" min="0"/>
+                <button class="btn-set" id="setBudgetBtn">Set</button>
+            </div>
+        </div>
+
+        <div class="sidebar-date" id="sidebarDate"></div>
+
+        <div class="filter-block">
+            <p class="filter-title">Filter</p>
+            <div class="filter-pills">
+                <button class="pill active" data-cat="all">All</button>
+                <button class="pill" data-cat="Breakfast">Breakfast</button>
+                <button class="pill" data-cat="Lunch">Lunch</button>
+                <button class="pill" data-cat="Dinner">Dinner</button>
+                <button class="pill" data-cat="Snack">Snack</button>
+            </div>
+        </div>
+
+        <div class="over-budget-banner" id="overBudgetBanner">
+            <span class="warn-icon">⚠</span>
+            <div>
+                <strong>Over budget</strong>
+                <p>You've exceeded your daily limit.</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-panel">
+
+        <header class="main-header">
+            <div>
+                <h1 class="page-title">Today's Meals</h1>
+                <p class="page-sub" id="pageSubGreet">Track every peso you spend on food.</p>
+            </div>
+            <div class="header-right">
+                <div class="search-wrap">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search meals…"/>
+                </div>
+                <button class="btn-logout" id="logoutBtn" title="Sign out">Sign out</button>
+            </div>
+        </header>
+
+        <section class="form-card">
+            <h2 class="form-title">Add a Meal</h2>
+            <div class="form-grid">
+                <div class="field-group">
+                    <label class="input-label" for="mealName">Meal name</label>
+                    <input type="text" id="mealName" class="styled-input" placeholder="e.g. Tapsilog"/>
+                </div>
+                <div class="field-group">
+                    <label class="input-label" for="mealCost">Cost (₱)</label>
+                    <input type="number" id="mealCost" class="styled-input" placeholder="e.g. 85" min="0"/>
+                </div>
+                <div class="field-group">
+                    <label class="input-label" for="mealCategory">Category</label>
+                    <select id="mealCategory" class="styled-input styled-select">
+                        <option value="Breakfast">☀ Breakfast</option>
+                        <option value="Lunch" selected>☀ Lunch</option>
+                        <option value="Dinner">🌙 Dinner</option>
+                        <option value="Snack">✦ Snack</option>
+                    </select>
+                </div>
+                <div class="field-group field-submit">
+                    <button class="btn-add" id="addMealBtn">
+                        <span class="btn-plus">+</span> Add Meal
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="meal-list-section">
+            <div class="list-header">
+                <h2 class="section-title" id="listTitle">All Meals</h2>
+                <span class="meal-count" id="mealCount">0 meals</span>
+            </div>
+
+            <div class="meal-list" id="mealList">
+
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-bowl">⬡</div>
+                    <p class="empty-title">No meals yet.</p>
+                    <p class="empty-sub">Start tracking your food spend above.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
